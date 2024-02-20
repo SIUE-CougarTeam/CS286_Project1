@@ -30,7 +30,7 @@ void printInstruction(item inputInstruction) {
 		default:
 			inputInstruction.instrStr = "ADDI\tR" + to_string(inputInstruction.rt) + ", R"
 			       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm);
-			cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr << endl;
+			cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr << "\topcode: " << inputInstruction.opcode << endl;
 			break;
 	}
 }
@@ -69,17 +69,17 @@ int main()
 			instruction.binStr = formatBinaryString(b.to_string());
 			instruction.valid = asUint >> 31;
 			instruction.opcode = asUint >> 26;
-			instruction.rs = (asUint << 6)>>27;
-			instruction.rt = (asUint << 11)>>27;
+			instruction.rs = (asUint << 6) >> 27;
+			instruction.rt = (asUint << 11) >> 27;
 			instruction.imm = (i << 16) >> 16;
 			//cout << "valid bit: " << valid << endl;
-			//cout << "opcode: " << opcode << endl;
+			//cout << "opcode: " << instruction.opcode << endl;
 			//cout << binstr << "\t"; 
 			if(!hasHitBreak){
 				printInstruction(instruction);
-				if (instruction.opcode == 32) { hasHitBreak = true; }
+				if (instruction.imm == 13) { hasHitBreak = true; }
 			} else {
-				cout << "Memory segment." << endl;
+				cout << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
 			}
 			MEM[addr] = instruction;
 			addr+=4;
