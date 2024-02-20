@@ -66,7 +66,7 @@ int main()
 			unsigned int asUint = (unsigned int) i;
 			instruction.asUint = asUint;
 			bitset<32> b( i );
-			instruction.binStr = formatBinaryString(b.to_string());
+			instruction.binStr = b.to_string();
 			instruction.valid = asUint >> 31;
 			instruction.opcode = asUint >> 26;
 			instruction.rs = (asUint << 6) >> 27;
@@ -76,6 +76,7 @@ int main()
 			//cout << "opcode: " << instruction.opcode << endl;
 			//cout << binstr << "\t"; 
 			if(!hasHitBreak){
+				instruction.binStr = formatBinaryString(instruction.binStr);
 				printInstruction(instruction);
 				if (instruction.imm == 13) { hasHitBreak = true; }
 			} else {
