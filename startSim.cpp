@@ -4,7 +4,14 @@
 #include <fcntl.h>
 #include <bitset>
 #include <iomanip>
+#include <string>
 using namespace std;
+
+struct item {
+	int i, rs, rt, rd, imm, opcode, valid;
+	string binStr, instrStr;
+	unsigned int asUint;
+};
 
 string formatBinaryString(string inputString) {
 	string formattedString = inputString.insert(26, 1, ' ');
@@ -16,6 +23,18 @@ string formatBinaryString(string inputString) {
 	return formattedString;
 }
 
+void printInstruction(item inputInstruction) {
+	switch (inputInstruction.opcode) {
+//		case 40:
+//			break;
+		default:
+			inputInstruction.instrStr = "ADDI\tR" + to_string(inputInstruction.rt) + ", R"
+			       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm);
+			cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr << endl;
+			break;
+	}
+}
+
 int main()
 {
         char buffer[4];
@@ -25,14 +44,15 @@ int main()
 
         int FD = open("test1.bin", O_RDONLY);
 
-	struct item{
+/*	struct item{
 		int i, rs, rt, rd, imm,opcode, valid;
 		string binStr, instrStr;
 		unsigned int asUint;
-	};
+	};*/
 	map< int, item > MEM;
 	int addr = 96;
         int amt = 4;
+	bool hasHitBreak = false;
         while( amt != 0 )
         {
                 amt = read(FD, buffer, 4);
@@ -55,13 +75,11 @@ int main()
 			//cout << "valid bit: " << valid << endl;
 			//cout << "opcode: " << opcode << endl;
 			//cout << binstr << "\t"; 
-			if( instruction.opcode == 40 ){
-				instruction.instrStr = "ADDI\tR" + to_string(instruction.rt) + ", R"
-				       + to_string(instruction.rs) + ", #" +to_string(instruction.imm);
-				cout << instruction.binStr << "\t" << instruction.instrStr << endl;
+			if(!hasHitBreak){
+				printInstruction(instruction);
+				if (instruction.opcode == 32) { hasHitBreak = true; }
 			} else {
-				instruction.instrStr = to_string(instruction.rt) + " " + to_string(instruction.rs) + " " + to_string(instruction.imm);
-				cout << instruction.binStr << "\t" << instruction.instrStr << endl;
+				cout << "Memory segment." << endl;
 			}
 			MEM[addr] = instruction;
 			addr+=4;
