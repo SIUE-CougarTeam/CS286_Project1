@@ -6,6 +6,16 @@
 #include <iomanip>
 using namespace std;
 
+string formatBinaryString(string inputString) {
+	string formattedString = inputString.insert(26, 1, ' ');
+	formattedString = formattedString.insert(21, 1, ' '); // Subtract by 5
+	formattedString = formattedString.insert(16, 1, ' ');
+	formattedString = formattedString.insert(11, 1, ' ');
+	formattedString = formattedString.insert(6, 1, ' ');
+	formattedString = formattedString.insert(1, 1, ' ');
+	return formattedString;
+}
+
 int main()
 {
         char buffer[4];
@@ -36,7 +46,7 @@ int main()
 			unsigned int asUint = (unsigned int) i;
 			instruction.asUint = asUint;
 			bitset<32> b( i );
-			instruction.binStr = b.to_string();
+			instruction.binStr = formatBinaryString(b.to_string());
 			instruction.valid = asUint >> 31;
 			instruction.opcode = asUint >> 26;
 			instruction.rs = (asUint << 6)>>27;
