@@ -23,7 +23,7 @@ string formatBinaryString(string inputString) {
 	return formattedString;
 }
 
-void printInstruction(item inputInstruction) {
+void printInstruction(int address, item inputInstruction) {
 	bool printOpcode = true;
 	switch (inputInstruction.opcode) {
 		case 33:
@@ -48,7 +48,7 @@ void printInstruction(item inputInstruction) {
 
 	inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
 	       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
-	cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr;
+	cout << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr;
 	if (printOpcode) { cout << "\topcode: " << inputInstruction.opcode << endl; }
 	else { cout << endl; }
 }
@@ -95,7 +95,7 @@ int main()
 			//cout << binstr << "\t"; 
 			if(!hasHitBreak){
 				instruction.binStr = formatBinaryString(instruction.binStr);
-				printInstruction(instruction);
+				printInstruction(addr, instruction);
 				if (instruction.imm == 13) { hasHitBreak = true; }
 			} else {
 				cout << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
