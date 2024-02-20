@@ -1,3 +1,3 @@
 add:
-	g++ -o output.txt EX_readBinaryFile.cpp
+	g++ -o disassembler.exe disassembler.cpp
 
