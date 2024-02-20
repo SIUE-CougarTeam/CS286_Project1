@@ -20,7 +20,7 @@ int main()
 		string binStr, instrStr;
 		unsigned int asUint;
 	};
-	map< int, item> MEM;
+	map< int, item > MEM;
 	int addr = 96;
         int amt = 4;
         while( amt != 0 )
