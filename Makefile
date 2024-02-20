@@ -1,3 +1,3 @@
 add:
-	g++ -o disassembler.exe disassembler.cpp
+	g++ -o disassembler.exe startSim.cpp
 
