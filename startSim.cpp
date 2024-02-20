@@ -24,15 +24,33 @@ string formatBinaryString(string inputString) {
 }
 
 void printInstruction(item inputInstruction) {
+	bool printOpcode = true;
 	switch (inputInstruction.opcode) {
-//		case 40:
-//			break;
+		case 33:
+			inputInstruction.instrStr = "BLTZ\tR";
+			printOpcode = false;
+			break;
+		case 35:
+			inputInstruction.instrStr = "LW\tR";
+			printOpcode = false;
+			break;
+		case 40:
+			inputInstruction.instrStr = "ADDI\tR";
+			printOpcode = false;
+			break;
+		case 43:
+			inputInstruction.instrStr = "SW\tR";
+			printOpcode = false;
+			break;
 		default:
-			inputInstruction.instrStr = "ADDI\tR" + to_string(inputInstruction.rt) + ", R"
-			       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm);
-			cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr << "\topcode: " << inputInstruction.opcode << endl;
 			break;
 	}
+
+	inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
+	       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+	cout << inputInstruction.binStr << "\t" << inputInstruction.instrStr;
+	if (printOpcode) { cout << "\topcode: " << inputInstruction.opcode << endl; }
+	else { cout << endl; }
 }
 
 int main()
