@@ -30,10 +30,12 @@ void printInstruction(int address, item inputInstruction) {
 		switch (inputInstruction.opcode) {
 			case 33:
 				inputInstruction.instrStr = "BLTZ\tR";
+				instructionType = 2;
 				printOpcode = false;
 				break;
 			case 34:
 				inputInstruction.instrStr = "J\t";
+				instructionType = 2;
 				printOpcode = false;
 				break;
 			case 35:
@@ -64,6 +66,12 @@ void printInstruction(int address, item inputInstruction) {
 					+ to_string(inputInstruction.rs) + ")");
 				break;
 			case 2:
+				inputInstruction.imm = inputInstruction.imm << 2;
+				if (inputInstruction.instrStr[0] == 'B') {
+					inputInstruction.instrStr.append(to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+				} else {
+					inputInstruction.instrStr.append("#" + to_string(inputInstruction.imm));
+				}
 				break;
 			default:
 				break;
