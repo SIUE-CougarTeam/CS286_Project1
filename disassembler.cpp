@@ -33,8 +33,13 @@ void printInstruction(int address, item inputInstruction) {
 		switch (inputInstruction.opcode) {
 			case 32:
 				if ((inputInstruction.asUint << 26) >> 26 == 0) {
-					inputInstruction.instrStr = "SLL\tR";
-					instructionType = 4;
+					if (inputInstruction.rt > 0) {
+						inputInstruction.instrStr = "SLL\tR";
+						instructionType = 4;
+					} else {
+						inputInstruction.instrStr = "NOP";
+						instructionType = -1;
+					}
 				} else if ((inputInstruction.asUint << 26) >> 26 == 2) {
 					inputInstruction.instrStr = "SRL\tR";
 					instructionType = 4;
