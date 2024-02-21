@@ -15,6 +15,8 @@ struct item {
 	unsigned int asUint;
 };
 
+ofstream dis;
+
 string formatBinaryString(string inputString) {
 	string formattedString = inputString.insert(26, 1, ' ');
 	formattedString = formattedString.insert(21, 1, ' '); // Subtract by 5
@@ -25,7 +27,7 @@ string formatBinaryString(string inputString) {
 	return formattedString;
 }
 
-void printInstruction(ofstream file, int address, item inputInstruction) {
+void printInstruction(int address, item inputInstruction) {
 	int instructionType = 0;
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
@@ -92,7 +94,7 @@ void printInstruction(ofstream file, int address, item inputInstruction) {
 		inputInstruction.instrStr = "Invalid instruction";
 	}
 
-	cout << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr << endl;
+	dis << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr << endl;
 }
 
 int main( int argc, char* argv[])
@@ -104,7 +106,6 @@ int main( int argc, char* argv[])
 
 //        int FD = open(argv[2], O_RDONLY);
         int FD = open("test1.bin", O_RDONLY);
-	ofstream dis;
 	dis.open("test1_dis.txt", ofstream::out);
 
 	map< int, item > MEM;
