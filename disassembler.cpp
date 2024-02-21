@@ -32,7 +32,13 @@ void printInstruction(int address, item inputInstruction) {
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
 			case 32:
-				if ((inputInstruction.imm << 26) >> 26 == 13) {
+				if ((inputInstruction.asUint << 26) >> 26 == 0) {
+					inputInstruction.instrStr = "SLL\tR";
+					instructionType = 4;
+				} else if (inputInstruction.imm == 8) {
+					inputInstruction.instrStr.append("JR\tR" + to_string(inputInstruction.rs));
+					instructionType = -1;
+				} else if ((inputInstruction.imm << 26) >> 26 == 13) {
 					inputInstruction.instrStr = "BREAK";
 					instructionType = -1;
 				} else if ((inputInstruction.asUint << 26) >> 26 == 32) {
@@ -41,9 +47,6 @@ void printInstruction(int address, item inputInstruction) {
 				} else if ((inputInstruction.asUint << 26) >> 26 == 34) {
 					inputInstruction.instrStr = "SUB\tR";
 					instructionType = 3;
-				} else if ((inputInstruction.asUint << 26) >> 26 == 0) {
-					inputInstruction.instrStr = "SLL\tR";
-					instructionType = 4;
 				}
 				break;
 			case 33:
@@ -64,6 +67,10 @@ void printInstruction(int address, item inputInstruction) {
 			case 43:
 				inputInstruction.instrStr = "SW\tR";
 				instructionType = 1;
+				break;
+			case 60:
+				inputInstruction.instrStr = "MUL\tR";
+				instructionType = 3;
 				break;
 			default:
 				break;
