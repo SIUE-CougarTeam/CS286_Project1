@@ -16,6 +16,7 @@ struct item {
 };
 
 ofstream dis;
+ofstream sim;
 
 string formatBinaryString(string inputString) {
 	string formattedString = inputString.insert(26, 1, ' ');
@@ -171,7 +172,8 @@ int main( int argc, char* argv[])
         } // end of decode
 	cout << endl;
 	dis.close();
-/*
+
+	sim.open("test1_sim.txt", ofstream::out);
 	// start sim
 	int PC = 96;
 	int R[32] = {0};
@@ -186,7 +188,7 @@ int main( int argc, char* argv[])
 		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
-		cout << "====================\ncycle:" + to_string(cycle) 
+		sim << "====================\ncycle:" + to_string(cycle) 
 			+ " " + to_string(PC) +"\t" + instruction.instrStr + " " + "\n\nregisters:\n"
 			+ to_string(R[0]) + " " + to_string(R[1]) +"\n";
 
@@ -195,5 +197,5 @@ int main( int argc, char* argv[])
 
 		if( cycle >= 2) break;
 	}
-*/
+	sim.close();
 }
