@@ -62,14 +62,14 @@ void printInstruction(int address, item inputInstruction) {
 	else { cout << endl; }
 }
 
-int main()
+int main( int argc, char* argv[])
 {
         char buffer[4];
         int i;
         char * iPtr;
         iPtr = (char*)(void*) &i;
 
-        int FD = open("test1.bin", O_RDONLY);
+        int FD = open(argv[2], O_RDONLY);
 
 /*	struct item{
 		int i, rs, rt, rd, imm,opcode, valid;
