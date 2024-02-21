@@ -1,51 +1,135 @@
+#include <map>
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
 #include <bitset>
 #include <iomanip>
+#include <string>
 using namespace std;
 
-int main()
+struct item {
+	int i, rs, rt, rd, imm, opcode, valid;
+	string binStr, instrStr;
+	unsigned int asUint;
+};
+
+string formatBinaryString(string inputString) {
+	string formattedString = inputString.insert(26, 1, ' ');
+	formattedString = formattedString.insert(21, 1, ' '); // Subtract by 5
+	formattedString = formattedString.insert(16, 1, ' ');
+	formattedString = formattedString.insert(11, 1, ' ');
+	formattedString = formattedString.insert(6, 1, ' ');
+	formattedString = formattedString.insert(1, 1, ' ');
+	return formattedString;
+}
+
+void printInstruction(int address, item inputInstruction) {
+	bool printOpcode = true;
+	if (inputInstruction.valid == 1) {
+		switch (inputInstruction.opcode) {
+			case 33:
+				inputInstruction.instrStr = "BLTZ\tR";
+				printOpcode = false;
+				break;
+			case 34:
+				inputInstruction.instrStr = "J\t";
+				printOpcode = false;
+				break;
+			case 35:
+				inputInstruction.instrStr = "LW\tR";
+				printOpcode = false;
+				break;
+			case 40:
+				inputInstruction.instrStr = "ADDI\tR";
+				printOpcode = false;
+				break;
+			case 43:
+				inputInstruction.instrStr = "SW\tR";
+				printOpcode = false;
+				break;
+			default:
+				break;
+		}
+		inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
+		       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+	} else {
+		inputInstruction.instrStr = "Invalid instruction";
+		printOpcode = false;
+	}
+
+	cout << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr;
+	if (printOpcode) { cout << "\topcode: " << inputInstruction.opcode << endl; }
+	else { cout << endl; }
+}
+
+int main( int argc, char* argv[])
 {
         char buffer[4];
         int i;
         char * iPtr;
         iPtr = (char*)(void*) &i;
 
-        int FD = open("test1.bin", O_RDONLY);
+        int FD = open(argv[2], O_RDONLY);
 
+	map< int, item > MEM;
+	int addr = 96;
         int amt = 4;
+	bool hasHitBreak = false;
         while( amt != 0 )
         {
                 amt = read(FD, buffer, 4);
-                if( amt == 4 )
+                if( amt == 4)
                 {
                         iPtr[0] = buffer[3];
                         iPtr[1] = buffer[2];
                         iPtr[2] = buffer[1];
                         iPtr[3] = buffer[0];
-                        cout << "i = " << hex << i << endl;
-
+                	item instruction;
 			unsigned int asUint = (unsigned int) i;
+			instruction.asUint = asUint;
 			bitset<32> b( i );
-			string binstr = b.to_string();
-			int valid = asUint >> 31;
-			int opcode = asUint >> 26;
-			int rs = (asUint << 6) >> 27;
-			cout << "valid bit: " << valid << endl;
-                        cout << "op code: " << opcode << endl;
-                        cout << "rs bits: " << rs << endl;
-			cout << binstr << "\t";
-			if ( opcode == 40 ){
-				cout << "ADDI\tR , R" << rs << endl;
+			instruction.binStr = b.to_string();
+			instruction.valid = asUint >> 31;
+			instruction.opcode = asUint >> 26;
+			instruction.rs = (asUint << 6) >> 27;
+			instruction.rt = (asUint << 11) >> 27;
+			instruction.imm = (i << 16) >> 16;
+			//cout << "valid bit: " << valid << endl;
+			//cout << "opcode: " << instruction.opcode << endl;
+			//cout << binstr << "\t"; 
+			if(!hasHitBreak){
+				instruction.binStr = formatBinaryString(instruction.binStr);
+				printInstruction(addr, instruction);
+				if (instruction.imm == 13) { hasHitBreak = true; }
+			} else {
+				cout << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
 			}
-                }
-        }
+			MEM[addr] = instruction;
+			addr+=4;
+		}
+        } // end of decode
 
+	// start sim
+	int PC = 96;
+	int R[32] = {0};
+	int cycle = 1;
 
+	while( true ){
+		item instruction = MEM[PC];
+		while( instruction.valid == 0 ){
+			PC +=4;
+			instruction = MEM[PC];
+		}
+		if(instruction.opcode == 40 ) {
+			R[instruction.rt] = R[instruction.rs] + instruction.imm;
+		}
+		cout << "====================\ncycle:" + to_string(cycle) 
+			+ " " + to_string(PC) +"\t" + instruction.instrStr + " " + "\n\nregisters:\n"
+			+ to_string(R[0]) + " " + to_string(R[1]) +"\n";
 
+		PC += 4;
+		cycle ++;
 
-
-
-
+		if( cycle >= 2) break;
+	}
 }
