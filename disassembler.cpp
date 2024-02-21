@@ -5,6 +5,8 @@
 #include <bitset>
 #include <iomanip>
 #include <string>
+#include <fstream>
+
 using namespace std;
 
 struct item {
@@ -102,6 +104,8 @@ int main( int argc, char* argv[])
 
 //        int FD = open(argv[2], O_RDONLY);
         int FD = open("test1.bin", O_RDONLY);
+	ofstream dis;
+	dis.open("test1_dis.txt", ofstream::out);
 
 	map< int, item > MEM;
 	int addr = 96;
@@ -134,13 +138,14 @@ int main( int argc, char* argv[])
 				printInstruction(addr, instruction);
 				if (instruction.imm == 13) { hasHitBreak = true; }
 			} else {
-				cout << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
+				dis << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
 			}
 			MEM[addr] = instruction;
 			addr+=4;
 		}
         } // end of decode
 	cout << endl;
+	dis.close();
 /*
 	// start sim
 	int PC = 96;
