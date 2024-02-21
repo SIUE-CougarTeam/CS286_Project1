@@ -31,6 +31,10 @@ void printInstruction(int address, item inputInstruction) {
 				inputInstruction.instrStr = "BLTZ\tR";
 				printOpcode = false;
 				break;
+			case 34:
+				inputInstruction.instrStr = "J\t";
+				printOpcode = false;
+				break;
 			case 35:
 				inputInstruction.instrStr = "LW\tR";
 				printOpcode = false;
