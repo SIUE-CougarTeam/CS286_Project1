@@ -71,11 +71,6 @@ int main( int argc, char* argv[])
 
         int FD = open(argv[2], O_RDONLY);
 
-/*	struct item{
-		int i, rs, rt, rd, imm,opcode, valid;
-		string binStr, instrStr;
-		unsigned int asUint;
-	};*/
 	map< int, item > MEM;
 	int addr = 96;
         int amt = 4;
