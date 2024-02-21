@@ -24,39 +24,41 @@ string formatBinaryString(string inputString) {
 }
 
 void printInstruction(int address, item inputInstruction) {
-	bool printOpcode = true;
 	int instructionType = 0;
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
 			case 32:
 				if ((inputInstruction.imm << 26) >> 26 == 13) {
 					inputInstruction.instrStr = "BREAK";
-					instructionType = 4;
+					instructionType = -1;
+				} else if ((inputInstruction.asUint << 26) >> 26 == 32) {
+					inputInstruction.instrStr = "ADD\tR";
+					instructionType = 3;
+				} else if ((inputInstruction.asUint << 26) >> 26 == 34) {
+					inputInstruction.instrStr = "SUB\tR";
+					instructionType = 3;
+				} else if ((inputInstruction.asUint << 26) >> 26 == 0) {
+					inputInstruction.instrStr = "SLL\tR"; // No need to set instructionType to anything else.
 				}
 				break;
 			case 33:
 				inputInstruction.instrStr = "BLTZ\tR";
 				instructionType = 2;
-				printOpcode = false;
 				break;
 			case 34:
 				inputInstruction.instrStr = "J\t";
 				instructionType = 2;
-				printOpcode = false;
 				break;
 			case 35:
 				inputInstruction.instrStr = "LW\tR";
 				instructionType = 1;
-				printOpcode = false;
 				break;
 			case 40:
 				inputInstruction.instrStr = "ADDI\tR";
-				printOpcode = false;
 				break;
 			case 43:
 				inputInstruction.instrStr = "SW\tR";
 				instructionType = 1;
-				printOpcode = false;
 				break;
 			default:
 				break;
@@ -86,12 +88,9 @@ void printInstruction(int address, item inputInstruction) {
 		}
 	} else {
 		inputInstruction.instrStr = "Invalid instruction";
-		printOpcode = false;
 	}
 
-	cout << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr;
-	if (printOpcode) { cout << "\topcode: " << inputInstruction.opcode << endl; }
-	else { cout << endl; }
+	cout << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr << endl;
 }
 
 int main( int argc, char* argv[])
@@ -141,6 +140,7 @@ int main( int argc, char* argv[])
 			addr+=4;
 		}
         } // end of decode
+	cout << endl;
 /*
 	// start sim
 	int PC = 96;
