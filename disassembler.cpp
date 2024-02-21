@@ -25,6 +25,7 @@ string formatBinaryString(string inputString) {
 
 void printInstruction(int address, item inputInstruction) {
 	bool printOpcode = true;
+	int instructionType = 0;
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
 			case 33:
@@ -37,6 +38,7 @@ void printInstruction(int address, item inputInstruction) {
 				break;
 			case 35:
 				inputInstruction.instrStr = "LW\tR";
+				instructionType = 1;
 				printOpcode = false;
 				break;
 			case 40:
@@ -45,13 +47,27 @@ void printInstruction(int address, item inputInstruction) {
 				break;
 			case 43:
 				inputInstruction.instrStr = "SW\tR";
+				instructionType = 1;
 				printOpcode = false;
 				break;
 			default:
 				break;
 		}
-		inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
-		       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+
+		switch (instructionType) {
+			case 0:
+				inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
+				       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+				break;
+			case 1:
+				inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", " + to_string(inputInstruction.imm) + "(R"
+					+ to_string(inputInstruction.rs) + ")");
+				break;
+			case 2:
+				break;
+			default:
+				break;
+		}
 	} else {
 		inputInstruction.instrStr = "Invalid instruction";
 		printOpcode = false;
@@ -69,7 +85,8 @@ int main( int argc, char* argv[])
         char * iPtr;
         iPtr = (char*)(void*) &i;
 
-        int FD = open(argv[2], O_RDONLY);
+//        int FD = open(argv[2], O_RDONLY);
+        int FD = open("test1.bin", O_RDONLY);
 
 	map< int, item > MEM;
 	int addr = 96;
