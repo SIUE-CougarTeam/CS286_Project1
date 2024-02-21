@@ -28,6 +28,12 @@ void printInstruction(int address, item inputInstruction) {
 	int instructionType = 0;
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
+			case 32:
+				if ((inputInstruction.imm << 26) >> 26 == 13) {
+					inputInstruction.instrStr = "BREAK";
+					instructionType = 4;
+				}
+				break;
 			case 33:
 				inputInstruction.instrStr = "BLTZ\tR";
 				instructionType = 2;
@@ -72,6 +78,8 @@ void printInstruction(int address, item inputInstruction) {
 				} else {
 					inputInstruction.instrStr.append("#" + to_string(inputInstruction.imm));
 				}
+				break;
+			case 3:
 				break;
 			default:
 				break;
@@ -133,7 +141,7 @@ int main( int argc, char* argv[])
 			addr+=4;
 		}
         } // end of decode
-
+/*
 	// start sim
 	int PC = 96;
 	int R[32] = {0};
@@ -157,4 +165,5 @@ int main( int argc, char* argv[])
 
 		if( cycle >= 2) break;
 	}
+*/
 }
