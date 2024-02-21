@@ -111,10 +111,10 @@ int main( int argc, char* argv[])
         char * iPtr;
         iPtr = (char*)(void*) &i;
 
-//        int FD = open(argv[2], O_RDONLY);
-        int FD = open("test1.bin", O_RDONLY);
-//	  dis.open(argv[4], ofstream::out);
-	dis.open("test1_dis_local.txt", ofstream::out);
+        int FD = open(argv[2], O_RDONLY);
+//        int FD = open("test1.bin", O_RDONLY);
+	dis.open(argv[4], ofstream::out);
+//	dis.open("test1_dis_local.txt", ofstream::out);
 
 	map< int, item > MEM;
 	int addr = 96;
