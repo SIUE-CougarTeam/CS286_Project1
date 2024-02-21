@@ -86,12 +86,14 @@ void printInstruction(int address, item inputInstruction) {
 				}
 				break;
 			case 3:
+				inputInstruction.instrStr.append(to_string((inputInstruction.asUint << 16) >> 27) + ", R" + to_string(inputInstruction.rs)
+					+ ", R" + to_string(inputInstruction.rt));
 				break;
 			default:
 				break;
 		}
 	} else {
-		inputInstruction.instrStr = "Invalid instruction";
+		inputInstruction.instrStr = "Invalid Instruction";
 	}
 
 	dis << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr << endl;
