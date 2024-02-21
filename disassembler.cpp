@@ -42,7 +42,8 @@ void printInstruction(int address, item inputInstruction) {
 					inputInstruction.instrStr = "SUB\tR";
 					instructionType = 3;
 				} else if ((inputInstruction.asUint << 26) >> 26 == 0) {
-					inputInstruction.instrStr = "SLL\tR"; // No need to set instructionType to anything else.
+					inputInstruction.instrStr = "SLL\tR";
+					instructionType = 4;
 				}
 				break;
 			case 33:
@@ -89,6 +90,10 @@ void printInstruction(int address, item inputInstruction) {
 				inputInstruction.instrStr.append(to_string((inputInstruction.asUint << 16) >> 27) + ", R" + to_string(inputInstruction.rs)
 					+ ", R" + to_string(inputInstruction.rt));
 				break;
+			case 4:
+				inputInstruction.instrStr.append(to_string((inputInstruction.asUint << 16) >> 27) + ", R" + to_string(inputInstruction.rt)
+					+ ", #" + to_string((inputInstruction.asUint << 21) >> 27));
+				break;
 			default:
 				break;
 		}
@@ -108,6 +113,7 @@ int main( int argc, char* argv[])
 
 //        int FD = open(argv[2], O_RDONLY);
         int FD = open("test1.bin", O_RDONLY);
+//	  dis.open(argv[4], ofstream::out);
 	dis.open("test1_dis_local.txt", ofstream::out);
 
 	map< int, item > MEM;
@@ -117,7 +123,7 @@ int main( int argc, char* argv[])
         while( amt != 0 )
         {
                 amt = read(FD, buffer, 4);
-                if( amt == 4)
+                if( amt == 4 )
                 {
                         iPtr[0] = buffer[3];
                         iPtr[1] = buffer[2];
