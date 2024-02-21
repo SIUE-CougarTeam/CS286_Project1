@@ -25,7 +25,7 @@ string formatBinaryString(string inputString) {
 	return formattedString;
 }
 
-void printInstruction(int address, item inputInstruction) {
+void printInstruction(ofstream file, int address, item inputInstruction) {
 	int instructionType = 0;
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
