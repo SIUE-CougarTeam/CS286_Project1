@@ -35,9 +35,15 @@ void printInstruction(int address, item inputInstruction) {
 				if ((inputInstruction.asUint << 26) >> 26 == 0) {
 					inputInstruction.instrStr = "SLL\tR";
 					instructionType = 4;
+				} else if ((inputInstruction.asUint << 26) >> 26 == 2) {
+					inputInstruction.instrStr = "SRL\tR";
+					instructionType = 4;
 				} else if (inputInstruction.imm == 8) {
 					inputInstruction.instrStr.append("JR\tR" + to_string(inputInstruction.rs));
 					instructionType = -1;
+				} else if ((inputInstruction.asUint << 26) >> 26 == 10) {
+					inputInstruction.instrStr = "MOVZ\tR";
+					instructionType = 3;
 				} else if ((inputInstruction.imm << 26) >> 26 == 13) {
 					inputInstruction.instrStr = "BREAK";
 					instructionType = -1;
