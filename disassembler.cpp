@@ -197,14 +197,19 @@ int main( int argc, char* argv[])
 		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
-		sim << "====================\ncycle:" + to_string(cycle)
-			+ " " + to_string(PC) +"\t" + instruction.instrStr + " " + "\n\nregisters:\n"
-			+ to_string(R[0]) + " " + to_string(R[1]) +"\n";
+		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
+		for (int i = 0; i < 32; i++) {
+			if (i % 8 == 0) {
+				output += "\nr00:\t";
+			}
+			output += to_string(R[i]) + "\t"; //((i % 8 == 0) ? "\n" : "\t");
+		}
+		sim << output;
 
 		PC += 4;
 		cycle ++;
 
-		if( cycle > 144) break;
+		if( cycle > 10) break;
 	}
 	sim.close();
 }
