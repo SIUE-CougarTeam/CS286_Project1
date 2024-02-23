@@ -3,3 +3,28 @@ cycle:1 100
 
 registers:
 0 10
+====================
+cycle:2 104	 
+
+registers:
+0 10
+====================
+cycle:3 112	 
+
+registers:
+0 10
+====================
+cycle:4 116	 
+
+registers:
+0 10
+====================
+cycle:5 120	 
+
+registers:
+0 10
+====================
+cycle:6 124	 
+
+registers:
+0 10

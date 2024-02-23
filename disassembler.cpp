@@ -195,7 +195,7 @@ int main( int argc, char* argv[])
 		PC += 4;
 		cycle ++;
 
-		if( cycle >= 2) break;
+		if( cycle > 6) break;
 	}
 	sim.close();
 }
