@@ -197,14 +197,14 @@ int main( int argc, char* argv[])
 		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
-		sim << "====================\ncycle:" + to_string(cycle) 
+		sim << "====================\ncycle:" + to_string(cycle)
 			+ " " + to_string(PC) +"\t" + instruction.instrStr + " " + "\n\nregisters:\n"
 			+ to_string(R[0]) + " " + to_string(R[1]) +"\n";
 
 		PC += 4;
 		cycle ++;
 
-		if( cycle > 6) break;
+		if( cycle > 144) break;
 	}
 	sim.close();
 }
