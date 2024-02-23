@@ -205,7 +205,23 @@ int main( int argc, char* argv[])
                 sim << "r24: " + to_string(R[24]) + "\t" + to_string(R[25]) + "\t" + to_string(R[26]) 
                         + "\t" + to_string(R[27]) + "\t" + to_string(R[28]) + "\t" + to_string(R[29]) 
                         + "\t" + to_string(R[30]) + "\t" + to_string(R[31]) +"\n";
+		
+		// data
+		sim << "data:\n" 
+                + "172:\t" + to_string(MEM[0]) + "\t" + to_string(MEM[1]) + "\t" + to_string(MEM[2]) 
+                        + "\t" + to_string(MEM[3]) + "\t" + to_string(MEM[4]) + "\t" + to_string(MEM[5]) 
+                        + "\t" + to_string(MEM[6]) + "\t" + to_string(MEM[7]) +"\n";
+                        
+                + "204:\t" + to_string(MEM[8]) + "\t" + to_string(MEM[9]) + "\t" + to_string(MEM[10]) 
+                        + "\t" + to_string(MEM[11]) + "\t" + to_string(MEM[12]) + "\t" + to_string(MEM[13]) 
+                        + "\t" + to_string(MEM[14]) + "\t" + to_string(MEM[15]) +"\n";
 
+                + "236:\t" + to_string(MEM[16]) + "\t" + to_string(MEM[17]) + "\t" + to_string(MEM[18]) 
+                        + "\t" + to_string(MEM[19]) + "\t" + to_string(MEM[20]) + "\t" + to_string(MEM[21]) 
+                        + "\t" + to_string(MEM[22]) + "\t" + to_string(MEM[23]) +"\n";
+
+		
+		
 
 		PC += 4;
 		cycle ++;
