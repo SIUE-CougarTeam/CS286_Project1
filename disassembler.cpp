@@ -208,17 +208,17 @@ int main( int argc, char* argv[])
 		
 		// data
 		sim << "data:\n" 
-                + "172:\t" + to_string(MEM[0]) + "\t" + to_string(MEM[1]) + "\t" + to_string(MEM[2]) 
-                        + "\t" + to_string(MEM[3]) + "\t" + to_string(MEM[4]) + "\t" + to_string(MEM[5]) 
-                        + "\t" + to_string(MEM[6]) + "\t" + to_string(MEM[7]) +"\n";
+                + "172:\t" + MEM[0] + "\t" + MEM[1] + "\t" + MEM[2] 
+                        + "\t" + MEM[3] + "\t" + MEM[4] + "\t" + MEM[5] 
+                        + "\t" + MEM[6] + "\t" + MEM[7] +"\n";
                         
-                + "204:\t" + to_string(MEM[8]) + "\t" + to_string(MEM[9]) + "\t" + to_string(MEM[10]) 
-                        + "\t" + to_string(MEM[11]) + "\t" + to_string(MEM[12]) + "\t" + to_string(MEM[13]) 
-                        + "\t" + to_string(MEM[14]) + "\t" + to_string(MEM[15]) +"\n";
+                + "204:\t" + MEM[8] + "\t" + MEM[9] + "\t" + MEM[10] 
+                        + "\t" + MEM[11] + "\t" + MEM[12] + "\t" + MEM[13] 
+                        + "\t" + MEM[14] + "\t" + MEM[15] +"\n";
 
-                + "236:\t" + to_string(MEM[16]) + "\t" + to_string(MEM[17]) + "\t" + to_string(MEM[18]) 
-                        + "\t" + to_string(MEM[19]) + "\t" + to_string(MEM[20]) + "\t" + to_string(MEM[21]) 
-                        + "\t" + to_string(MEM[22]) + "\t" + to_string(MEM[23]) +"\n";
+                + "236:\t" + MEM[16] + "\t" + MEM[17] + "\t" + MEM[18] 
+                        + "\t" + MEM[19] + "\t" + MEM[20] + "\t" + MEM[21] 
+                        + "\t" + MEM[22] + "\t" + MEM[23] +"\n";
 
 		
 		
