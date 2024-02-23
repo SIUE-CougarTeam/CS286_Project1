@@ -131,8 +131,16 @@ int main( int argc, char* argv[])
         char * iPtr;
         iPtr = (char*)(void*) &i;
 
-        int FD = open(argv[2], O_RDONLY);
-	dis.open(argv[4], ofstream::out);
+	int FD;
+	if (argc > 3) {
+		string inputName = argv[2];
+		inputName.append(".bin");
+		FD = open(inputName.c_str(), O_RDONLY);
+	} else {
+		FD = open("test1.bin", O_RDONLY);
+	}
+//        int FD = open(inputName, O_RDONLY);
+	dis.open((string(argv[4]) + "_dis.txt").c_str(), ofstream::out);
 
 	map< int, item > MEM;
 	int addr = 96;
@@ -174,7 +182,7 @@ int main( int argc, char* argv[])
 	cout << endl;
 	dis.close();
 
-	sim.open("test1_sim.txt", ofstream::out);
+	sim.open((string(argv[4]) + "_sim.txt").c_str(), ofstream::out);
 	// start sim
 	int PC = 96;
 	int R[32] = {0};
