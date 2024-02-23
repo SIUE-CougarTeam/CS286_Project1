@@ -30,10 +30,11 @@ string formatBinaryString(string inputString) {
 
 void printInstruction(int address, item inputInstruction) {
 	int instructionType = 0;
+	int bottomSixBits = ((inputInstruction.asUint << 26) >> 26);
 	if (inputInstruction.valid == 1) {
 		switch (inputInstruction.opcode) {
 			case 32:
-				if ((inputInstruction.asUint << 26) >> 26 == 0) {
+				if ( bottomSixBits == 0) {
 					if (inputInstruction.rt > 0) {
 						inputInstruction.instrStr = "SLL\tR";
 						instructionType = 4;
@@ -41,22 +42,22 @@ void printInstruction(int address, item inputInstruction) {
 						inputInstruction.instrStr = "NOP";
 						instructionType = -1;
 					}
-				} else if ((inputInstruction.asUint << 26) >> 26 == 2) {
+				} else if ( bottomSixBits == 2) {
 					inputInstruction.instrStr = "SRL\tR";
 					instructionType = 4;
 				} else if (inputInstruction.imm == 8) {
 					inputInstruction.instrStr.append("JR\tR" + to_string(inputInstruction.rs));
 					instructionType = -1;
-				} else if ((inputInstruction.asUint << 26) >> 26 == 10) {
+				} else if (  bottomSixBits  == 10) {
 					inputInstruction.instrStr = "MOVZ\tR";
 					instructionType = 3;
-				} else if ((inputInstruction.imm << 26) >> 26 == 13) {
+				} else if ( bottomSixBits  == 13) {
 					inputInstruction.instrStr = "BREAK";
 					instructionType = -1;
-				} else if ((inputInstruction.asUint << 26) >> 26 == 32) {
+				} else if ( bottomSixBits == 32) {
 					inputInstruction.instrStr = "ADD\tR";
 					instructionType = 3;
-				} else if ((inputInstruction.asUint << 26) >> 26 == 34) {
+				} else if ( bottomSixBits == 34) {
 					inputInstruction.instrStr = "SUB\tR";
 					instructionType = 3;
 				}
