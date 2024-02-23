@@ -189,8 +189,23 @@ int main( int argc, char* argv[])
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
 		sim << "====================\ncycle:" + to_string(cycle) 
-			+ " " + to_string(PC) +"\t" + instruction.instrStr + " " + "\n\nregisters:\n"
-			+ to_string(R[0]) + " " + to_string(R[1]) +"\n";
+			+ " " + to_string(PC) +"\t" + I.instrStr + " " + "\n\nregisters:\n"
+			+ "r00: " + to_string(R[0]) + "\t" + to_string(R[1]) + "\t" + to_string(R[2]) 
+                        + "\t" + to_string(R[3]) + "\t" + to_string(R[4]) + "\t" + to_string(R[5]) 
+                        + "\t" + to_string(R[6]) + "\t" + to_string(R[7]) +"\n";
+                        
+                sim << "r08: " + to_string(R[8]) + "\t" + to_string(R[9]) + "\t" + to_string(R[10]) 
+                        + "\t" + to_string(R[11]) + "\t" + to_string(R[12]) + "\t" + to_string(R[13]) 
+                        + "\t" + to_string(R[14]) + "\t" + to_string(R[15]) +"\n";
+
+                sim << "r16: " + to_string(R[16]) + "\t" + to_string(R[17]) + "\t" + to_string(R[18]) 
+                        + "\t" + to_string(R[19]) + "\t" + to_string(R[20]) + "\t" + to_string(R[21]) 
+                        + "\t" + to_string(R[22]) + "\t" + to_string(R[23]) +"\n";
+
+                sim << "r24: " + to_string(R[24]) + "\t" + to_string(R[25]) + "\t" + to_string(R[26]) 
+                        + "\t" + to_string(R[27]) + "\t" + to_string(R[28]) + "\t" + to_string(R[29]) 
+                        + "\t" + to_string(R[30]) + "\t" + to_string(R[31]) +"\n";
+
 
 		PC += 4;
 		cycle ++;
