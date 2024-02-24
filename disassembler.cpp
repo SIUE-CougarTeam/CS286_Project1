@@ -28,61 +28,61 @@ string formatBinaryString(string inputString) {
 	return formattedString;
 }
 
-void printInstruction(int address, item inputInstruction) {
+void printInstruction(int address, item* inputInstruction) {
 	int instructionType = 0;
-	int bottomSixBits = ((inputInstruction.asUint << 26) >> 26);
-	if (inputInstruction.valid == 1) {
-		switch (inputInstruction.opcode) {
+	int bottomSixBits = ((inputInstruction->asUint << 26) >> 26);
+	if (inputInstruction->valid == 1) {
+		switch (inputInstruction->opcode) {
 			case 32:
 				if ( bottomSixBits == 0) {
-					if (inputInstruction.rt > 0) {
-						inputInstruction.instrStr = "SLL\tR";
+					if (inputInstruction->rt > 0) {
+						inputInstruction->instrStr = "SLL\tR";
 						instructionType = 4;
 					} else {
-						inputInstruction.instrStr = "NOP";
+						inputInstruction->instrStr = "NOP";
 						instructionType = -1;
 					}
 				} else if ( bottomSixBits == 2) {
-					inputInstruction.instrStr = "SRL\tR";
+					inputInstruction->instrStr = "SRL\tR";
 					instructionType = 4;
-				} else if (inputInstruction.imm == 8) {
-					inputInstruction.instrStr.append("JR\tR" + to_string(inputInstruction.rs));
+				} else if (inputInstruction->imm == 8) {
+					inputInstruction->instrStr.append("JR\tR" + to_string(inputInstruction->rs));
 					instructionType = -1;
 				} else if (  bottomSixBits  == 10) {
-					inputInstruction.instrStr = "MOVZ\tR";
+					inputInstruction->instrStr = "MOVZ\tR";
 					instructionType = 3;
 				} else if ( bottomSixBits  == 13) {
-					inputInstruction.instrStr = "BREAK";
+					inputInstruction->instrStr = "BREAK";
 					instructionType = -1;
 				} else if ( bottomSixBits == 32) {
-					inputInstruction.instrStr = "ADD\tR";
+					inputInstruction->instrStr = "ADD\tR";
 					instructionType = 3;
 				} else if ( bottomSixBits == 34) {
-					inputInstruction.instrStr = "SUB\tR";
+					inputInstruction->instrStr = "SUB\tR";
 					instructionType = 3;
 				}
 				break;
 			case 33:
-				inputInstruction.instrStr = "BLTZ\tR";
+				inputInstruction->instrStr = "BLTZ\tR";
 				instructionType = 2;
 				break;
 			case 34:
-				inputInstruction.instrStr = "J\t";
+				inputInstruction->instrStr = "J\t";
 				instructionType = 2;
 				break;
 			case 35:
-				inputInstruction.instrStr = "LW\tR";
+				inputInstruction->instrStr = "LW\tR";
 				instructionType = 1;
 				break;
 			case 40:
-				inputInstruction.instrStr = "ADDI\tR";
+				inputInstruction->instrStr = "ADDI\tR";
 				break;
 			case 43:
-				inputInstruction.instrStr = "SW\tR";
+				inputInstruction->instrStr = "SW\tR";
 				instructionType = 1;
 				break;
 			case 60:
-				inputInstruction.instrStr = "MUL\tR";
+				inputInstruction->instrStr = "MUL\tR";
 				instructionType = 3;
 				break;
 			default:
@@ -91,37 +91,37 @@ void printInstruction(int address, item inputInstruction) {
 
 		switch (instructionType) {
 			case 0:
-				inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", R"
-				       + to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+				inputInstruction->instrStr.append(to_string(inputInstruction->rt) + ", R"
+				       + to_string(inputInstruction->rs) + ", #" + to_string(inputInstruction->imm));
 				break;
 			case 1:
-				inputInstruction.instrStr.append(to_string(inputInstruction.rt) + ", " + to_string(inputInstruction.imm) + "(R"
-					+ to_string(inputInstruction.rs) + ")");
+				inputInstruction->instrStr.append(to_string(inputInstruction->rt) + ", " + to_string(inputInstruction->imm) + "(R"
+					+ to_string(inputInstruction->rs) + ")");
 				break;
 			case 2:
-				inputInstruction.imm = inputInstruction.imm << 2;
-				if (inputInstruction.instrStr[0] == 'B') {
-					inputInstruction.instrStr.append(to_string(inputInstruction.rs) + ", #" + to_string(inputInstruction.imm));
+				inputInstruction->imm = inputInstruction->imm << 2;
+				if (inputInstruction->instrStr[0] == 'B') {
+					inputInstruction->instrStr.append(to_string(inputInstruction->rs) + ", #" + to_string(inputInstruction->imm));
 				} else {
-					inputInstruction.instrStr.append("#" + to_string(inputInstruction.imm));
+					inputInstruction->instrStr.append("#" + to_string(inputInstruction->imm));
 				}
 				break;
 			case 3:
-				inputInstruction.instrStr.append(to_string((inputInstruction.asUint << 16) >> 27) + ", R" + to_string(inputInstruction.rs)
-					+ ", R" + to_string(inputInstruction.rt));
+				inputInstruction->instrStr.append(to_string((inputInstruction->asUint << 16) >> 27) + ", R" + to_string(inputInstruction->rs)
+					+ ", R" + to_string(inputInstruction->rt));
 				break;
 			case 4:
-				inputInstruction.instrStr.append(to_string((inputInstruction.asUint << 16) >> 27) + ", R" + to_string(inputInstruction.rt)
-					+ ", #" + to_string((inputInstruction.asUint << 21) >> 27));
+				inputInstruction->instrStr.append(to_string((inputInstruction->asUint << 16) >> 27) + ", R" + to_string(inputInstruction->rt)
+					+ ", #" + to_string((inputInstruction->asUint << 21) >> 27));
 				break;
 			default:
 				break;
 		}
 	} else {
-		inputInstruction.instrStr = "Invalid Instruction";
+		inputInstruction->instrStr = "Invalid Instruction";
 	}
 
-	dis << inputInstruction.binStr << "\t" << address << "\t" << inputInstruction.instrStr << endl;
+	dis << inputInstruction->binStr << "\t" << address << "\t" << inputInstruction->instrStr << endl;
 }
 
 int main( int argc, char* argv[])
@@ -170,7 +170,7 @@ int main( int argc, char* argv[])
 			//cout << binstr << "\t"; 
 			if(!hasHitBreak){
 				instruction.binStr = formatBinaryString(instruction.binStr);
-				printInstruction(addr, instruction);
+				printInstruction(addr, &instruction);
 				if (instruction.imm == 13) { hasHitBreak = true; }
 			} else {
 				dis << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
