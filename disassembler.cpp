@@ -197,14 +197,26 @@ int main( int argc, char* argv[])
 		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
+
 		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
+
 		for (int i = 0; i < 32; i++) {
 			if (i % 8 == 0) {
 				output += "\nr" + ((i < 15) ? (to_string(0) + to_string(i)) : (to_string(i))) + ":\t";
 			}
-			output += to_string(R[i]) + "\t"; //((i % 8 == 0) ? "\n" : "\t");
+			output += to_string(R[i]) + "\t";
 		}
 		output += "\n\n";
+
+		for (int i = 0; i < 24; i++) {
+			if (i % 8 == 0) {
+				int memoryAddress = 172 + (i * 4);
+				output += "\n" + to_string(memoryAddress) + ":\t";
+			}
+//			cout << MEM[i] << endl;
+		}
+		output += "\n\n";
+
 		sim << output;
 
 		PC += 4;
