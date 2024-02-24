@@ -189,13 +189,14 @@ int main( int argc, char* argv[])
 	int R[32] = {0};
 	int cycle = 1;
 
-	while( true ){
+	bool hasHitMemoryBreak = false;
+	while( !hasHitMemoryBreak ){
 		item instruction = MEM[PC];
-/*		while( instruction.valid == 0 ){
+		if ( instruction.valid == 0 ){
 			PC +=4;
-			instruction = MEM[PC];
-			cout << "Invalid" << endl;
-		}*/
+			continue;
+		}
+
 		switch (instruction.opcode) {
 			case 32:
 				break;
@@ -240,8 +241,7 @@ int main( int argc, char* argv[])
 		PC += 4;
 		cycle ++;
 
-		if( cycle > 144) break;
-		sim << instruction.instrStr << endl;
+		if( instruction.instrStr == "BREAK" ) hasHitMemoryBreak = true;
 	}
 	sim.close();
 }
