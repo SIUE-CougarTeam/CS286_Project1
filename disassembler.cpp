@@ -215,10 +215,10 @@ int main( int argc, char* argv[])
 				break;
 		}
 		cout << instruction.instrStr << endl;
-/*		if(instruction.opcode == 40 ) {
+		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
-*/
+
 		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
 
 		for (int i = 0; i < 32; i++) {
