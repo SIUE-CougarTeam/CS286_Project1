@@ -1,3 +1,3 @@
-add:
-	g++ -o mipssim disassembler.cpp
+all:
+	g++ disassembler.cpp -o mipssim
 

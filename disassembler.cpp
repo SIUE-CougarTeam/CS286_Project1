@@ -176,7 +176,7 @@ int main( int argc, char* argv[])
 				dis << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
 			}
 			MEM[addr] = instruction;
-//			cout << MEM.at(addr) << endl;
+//			cout << MEM.at(addr).instrStr << endl;
 			addr+=4;
 		}
         } // end of decode
@@ -191,11 +191,11 @@ int main( int argc, char* argv[])
 
 	while( true ){
 		item instruction = MEM[PC];
-		while( instruction.valid == 0 ){
+/*		while( instruction.valid == 0 ){
 			PC +=4;
 			instruction = MEM[PC];
 			cout << "Invalid" << endl;
-		}
+		}*/
 		switch (instruction.opcode) {
 			case 32:
 				break;
@@ -214,7 +214,7 @@ int main( int argc, char* argv[])
 			case 60:
 				break;
 		}
-		cout << instruction.instrStr << endl;
+
 		if(instruction.opcode == 40 ) {
 			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
@@ -234,16 +234,17 @@ int main( int argc, char* argv[])
 				int memoryAddress = 172 + (i * 4);
 				output += "\n" + to_string(memoryAddress) + ":\t";
 			}
-//			cout << MEM[i] << endl;
+			output += to_string(instruction.imm);
 		}
 		output += "\n\n";
 
 		sim << output;
-
+/**/
 		PC += 4;
 		cycle ++;
 
-		if( cycle > 10) break;
+		if( cycle > 144) break;
+		sim << instruction.instrStr << endl;
 	}
 	sim.close();
 }
