@@ -206,6 +206,7 @@ int main( int argc, char* argv[])
 			case 35:
 				break;
 			case 40:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				break;
 			case 42:
 				break;
@@ -213,10 +214,6 @@ int main( int argc, char* argv[])
 				break;
 			case 60:
 				break;
-		}
-
-		if(instruction.opcode == 40 ) {
-			R[instruction.rt] = R[instruction.rs] + instruction.imm;
 		}
 
 		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
@@ -234,7 +231,7 @@ int main( int argc, char* argv[])
 				int memoryAddress = 172 + (i * 4);
 				output += "\n" + to_string(memoryAddress) + ":\t";
 			}
-			output += to_string(instruction.imm);
+			output += (to_string(instruction.imm) + "\t");
 		}
 		output += "\n\n";
 
