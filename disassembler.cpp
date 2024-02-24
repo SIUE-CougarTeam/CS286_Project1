@@ -200,10 +200,11 @@ int main( int argc, char* argv[])
 		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
 		for (int i = 0; i < 32; i++) {
 			if (i % 8 == 0) {
-				output += "\nr00:\t";
+				output += "\nr" + ((i < 15) ? (to_string(0) + to_string(i)) : (to_string(i))) + ":\t";
 			}
 			output += to_string(R[i]) + "\t"; //((i % 8 == 0) ? "\n" : "\t");
 		}
+		output += "\n\n";
 		sim << output;
 
 		PC += 4;
