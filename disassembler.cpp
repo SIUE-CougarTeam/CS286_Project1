@@ -139,46 +139,46 @@ int main( int argc, char* argv[])
 	} else {
 		FD = open("test1.bin", O_RDONLY);
 	}
-//        int FD = open(inputName, O_RDONLY);
+	// int FD = open(inputName, O_RDONLY);
 	dis.open((string(argv[4]) + "_dis.txt").c_str(), ofstream::out);
 
 	map< int, item > MEM;
 	int addr = 96;
-        int amt = 4;
+	int amt = 4;
 	bool hasHitBreak = false;
         while( amt != 0 )
         {
-                amt = read(FD, buffer, 4);
-                if( amt == 4 )
-                {
-                        iPtr[0] = buffer[3];
-                        iPtr[1] = buffer[2];
-                        iPtr[2] = buffer[1];
-                        iPtr[3] = buffer[0];
-                	item instruction;
-			unsigned int asUint = (unsigned int) i;
-			instruction.asUint = asUint;
-			bitset<32> b( i );
-			instruction.binStr = b.to_string();
-			instruction.valid = asUint >> 31;
-			instruction.opcode = asUint >> 26;
-			instruction.rs = (asUint << 6) >> 27;
-			instruction.rt = (asUint << 11) >> 27;
-			instruction.imm = (i << 16) >> 16;
-			//cout << "valid bit: " << valid << endl;
-			//cout << "opcode: " << instruction.opcode << endl;
-			//cout << binstr << "\t"; 
-			if(!hasHitBreak){
-				instruction.binStr = formatBinaryString(instruction.binStr);
-				printInstruction(addr, &instruction);
-				if (instruction.imm == 13) { hasHitBreak = true; }
-			} else {
-				dis << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
+			amt = read(FD, buffer, 4);
+			if( amt == 4 )
+			{
+				iPtr[0] = buffer[3];
+				iPtr[1] = buffer[2];
+				iPtr[2] = buffer[1];
+				iPtr[3] = buffer[0];
+				item instruction;
+				unsigned int asUint = (unsigned int) i;
+				instruction.asUint = asUint;
+				bitset<32> b( i );
+				instruction.binStr = b.to_string();
+				instruction.valid = asUint >> 31;
+				instruction.opcode = asUint >> 26;
+				instruction.rs = (asUint << 6) >> 27;
+				instruction.rt = (asUint << 11) >> 27;
+				instruction.imm = (i << 16) >> 16;
+				// cout << "valid bit: " << valid << endl;
+				// cout << "opcode: " << instruction.opcode << endl;
+				// cout << binstr << "\t"; 
+				if(!hasHitBreak){
+					instruction.binStr = formatBinaryString(instruction.binStr);
+					printInstruction(addr, &instruction);
+					if (instruction.imm == 13) { hasHitBreak = true; }
+				} else {
+					dis << instruction.binStr << "\t" << addr << "\t" << instruction.imm << endl;
+				}
+				MEM[addr] = instruction;
+				// cout << MEM.at(addr).instrStr << endl;
+				addr+=4;
 			}
-			MEM[addr] = instruction;
-//			cout << MEM.at(addr).instrStr << endl;
-			addr+=4;
-		}
         } // end of decode
 	cout << endl;
 	dis.close();
@@ -225,7 +225,7 @@ int main( int argc, char* argv[])
 			}
 			output += to_string(R[i]) + "\t";
 		}
-		output += "\n\n";
+		output += "\n\ndata:";
 
 		for (int i = 0; i < 24; i++) {
 			if (i % 8 == 0) {
