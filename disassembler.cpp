@@ -183,7 +183,7 @@ int main( int argc, char* argv[])
 	cout << endl;
 	dis.close();
 
-	sim.open((string(argv[4]) + "_sim.txt").c_str(), ofstream::out);
+	sim.open((string(argv[4]) + "_pipeline.txt").c_str(), ofstream::out);
 	// start sim
 	int PC = 96;
 	int R[32] = {0};

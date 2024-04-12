@@ -6,6 +6,37 @@
 #include <iomanip>
 using namespace std;
 
+struct item{
+	int i, rs, rt, rd, imm,opcode, valid, 
+		target, func, samt, jTarget, dest, src1, src2;
+	string binStr, instrStr, binStrSpace;
+	unsigned int asUint;
+};
+	int PC = 96;
+	int R[32] = {0};
+	int cycle = 1;
+	int preissue[4] ={0};
+	int premem[2] = {0};
+	int prealu[2]= {0};
+	int postmem=0;
+	int postalu=0;
+	bool didBreak = false;
+	map< int, item> MEM;
+	bool XBW( int rNum, int index ){
+	for( int i = 0; i < index; i++ ) {
+		if( preissue[i] !=0 && MEM[preissue[i]].dest == rNum) return true;
+	}	
+	for( int i = 0; i < 2; i++ ) {
+		if( premem[i] != 0 &&MEM[premem[i]].dest == rNum) return true;
+	}	
+	for( int i = 0; i < 2; i++ ) {
+		if( prealu[i] != 0 && MEM[prealu[i]].dest == rNum) return true;
+	}	
+	if( postalu != 0 && MEM[postalu].dest == rNum) return true;
+	if( postmem !=0 && MEM[postmem].dest == rNum) return true;
+	return false;
+}
+
 int main( int argc, char* argv[] )
 {
 	// ./mipssim -i test1.bin -o   x1
@@ -19,17 +50,9 @@ int main( int argc, char* argv[] )
         iPtr = (char*)(void*) &i;
         int FD = open( argv[2], O_RDONLY);
 	//ofstream cout( string( argv[4]) + "_dis.txt");
-	//ofstream simout( string( argv[4]) + "_sim.txt");
-	struct item{
-		int i, rs, rt, rd, imm,opcode, valid, 
-		    target, func, samt, jTarget, dest, src1, src2;
-		string binStr, instrStr, binStrSpace;
-		unsigned int asUint;
-	};
-	map< int, item> MEM;
+	//ofstream simout( string( argv[4]) + "_pipeline.txt");
 	int addr = 96;
-        int amt = 4;
-	bool didBreak = false;
+	int amt = 4;
 	int dataStart, dataEnd;
 	while( amt != 0 )
         {
@@ -113,43 +136,13 @@ int main( int argc, char* argv[] )
 			MEM[addr] = I;
 			addr+=4;
 		}
-    } // end of decode
+        } // end of decode
 	dataEnd = addr;
 	// start sim
-	int PC = 96;
-	int R[32] = {0};
-	int cycle = 1;
 	didBreak = false;
-	int preissue[4] = {0};
-	int premem[2] = {0};
-	int prealu[2] = {0};
-	int postmem = 0;
-	int postalu = 0;
 	
-	bool XbW( int rNum, int index ) {
-		for( int i = 0; i < 4; i++ ) {
-			if ( MEM[preissue[i]].dest == rNum ) 
-			return true;
-		}
-		for( int i = 0; i < 4; i++ ) {
-			if ( MEM[prealu[i]].dest == rNum ) 
-			return true;
-		}
-		for( int i = 0; i < 4; i++ ) {
-			if ( MEM[premem[i]].dest == rNum ) 
-			return true;
-		}
-		for( int i = 0; i < 4; i++ ) {
-			if ( MEM[postmem[i]].dest == rNum ) 
-			return true;
-		}
-		for( int i = 0; i < 4; i++ ) {
-			if ( MEM[postalu[i]].dest == rNum ) 
-			return true;
-		}
-	}
-	struct fetch {
-		void run() {
+	struct fetch{
+		void run(){
 			if( didBreak ) return;
 			for( int i = 0; i<2; i++ ){
 				if( preissue[3] !=0 ) break;
@@ -159,7 +152,7 @@ int main( int argc, char* argv[] )
 				// 	check for hazards
 
 				if( I.opcode == 33 ){ // BLTZ
-					if( XbW( I.src1, 4) ) break;
+					if( XBW( I.src1, 4) ) break;
 					if( R[I.rs] < 0 )
 						PC += I.target;
 					break;
@@ -178,47 +171,67 @@ int main( int argc, char* argv[] )
 				PC +=4;
 			}
 		}
+	
 	};
-
 	fetch FETCH;
 
-    struct issue {
-        void run() {
-            cout << "Running..." << endl;
-        }
-    }
+	struct issue{
+		void run(){
+			for( int i = 0; i < 4; i++ ){
+				if( preissue[i] == 0 ) continue;
+				item I = MEM[preissue[i]];
+				if( XBW( I.src1, i) ) continue;
+				if( XBW( I.src2, i) ) continue;
+				if( XBW( I.dest, i) ) continue;
+				// WBR check
+				if (  LW or SW ){
+					if( premem[1] != 0 ) continue;
+					//LW SW checks
+					//isssue
+					preissue[i] = 0;
+				 }else{
+					// 
+					//issue 
+					preissue[i] = 0;
+				 }
 
-    issue ISSUE;
+			}
+			for( int k =0; k < 4; k++ )
+			for( int i =3; i > 0; i-- )
+				if( preissue[i-1] == 0 ){
+					preissue[i-1] = preissue[i];
+					preissue[i] = 0;
+				}
+		}
+	};
+	issue ISSUE;
 
-    struct mem {
-        void run() {
-            cout << "Running..." << endl;
-        }
-    }
+	struct memory {
+		void run() {
+			cout << "Running memory..." << endl;
+		}
+	};
+	memory MEMORY;
 
-    mem MEM;
+	struct alu {
+		void run() {
+			cout << "Running alu..." << endl;
+		}
+	};
+	alu ALU;
 
-    struct alu {
-        void run() {
-            cout << "Running..." << endl;
-        }
-    }
-
-    alu ALU;
-
-    struct wb {
-        void run() {
-            cout << "Running..." << endl;
-        }
-    }
-
-    wb WB;
+	struct wb {
+		void run() {
+			cout << "Running writeback..." << endl;
+		}
+	};
+	wb WB;
 
 	while( true ){
-		//WB.run();
-		//ALU.run();
-		//MEM.run();
-	//	ISSUE.run();
+		WB.run();
+		ALU.run();
+		MEMORY.run();
+		ISSUE.run();
 		FETCH.run();
 
 	}
