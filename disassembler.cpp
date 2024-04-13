@@ -73,26 +73,26 @@ void printInstruction(int address, item* inputInstruction) {
 				}
 				break;
 			case 33:
-				inputInstruction->instrStr = "BLTZ\tR";
+				inputInstruction->instrStr = "BLTZ\tR"; // ALU
 				instructionType = 2;
 				break;
 			case 34:
-				inputInstruction->instrStr = "J\t";
+				inputInstruction->instrStr = "J\t"; // ALU
 				instructionType = 2;
 				break;
 			case 35:
-				inputInstruction->instrStr = "LW\tR";
+				inputInstruction->instrStr = "LW\tR"; // MEM
 				instructionType = 1;
 				break;
 			case 40:
-				inputInstruction->instrStr = "ADDI\tR";
+				inputInstruction->instrStr = "ADDI\tR"; // ALU
 				break;
 			case 43:
-				inputInstruction->instrStr = "SW\tR";
+				inputInstruction->instrStr = "SW\tR"; // MEM
 				instructionType = 1;
 				break;
 			case 60:
-				inputInstruction->instrStr = "MUL\tR";
+				inputInstruction->instrStr = "MUL\tR"; // ALU
 				instructionType = 3;
 				break;
 			default:
@@ -167,6 +167,10 @@ string getRegisters() {
 		message += to_string(R[i]) + "\t";
 	}
 	return message;
+}
+
+void cycleInstructions() {
+	
 }
 
 int main( int argc, char* argv[])
@@ -244,21 +248,36 @@ int main( int argc, char* argv[])
 
 		switch (instruction.opcode) {
 			case 32:
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
 			case 33:
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
 			case 34:
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
 			case 35:
+				postmem = preissue[0];
+				premem[0] = preissue[0];
 				break;
 			case 40:
-				R[instruction.rt] = R[instruction.rs] + instruction.imm;
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
-			case 42:
+			case 43:
+				postmem = preissue[0];
+				premem[0] = preissue[0];
 				break;
 			case 46:
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
 			case 60:
+				postalu = preissue[0];
+				prealu[0] = preissue[0];
 				break;
 		}
 
