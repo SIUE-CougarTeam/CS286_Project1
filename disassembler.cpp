@@ -24,6 +24,7 @@ int prealu[2] = {0};
 int postmem = 0;
 int postalu = 0;
 bool didBreak = false;
+bool stillHaveCyclesToGo = true;
 map< int, item> MEM;
 ofstream dis;
 ofstream sim;
@@ -134,6 +135,19 @@ void printInstruction(int address, item* inputInstruction) {
 	dis << inputInstruction->binStr << "\t" << address << "\t" << inputInstruction->instrStr << endl;
 }
 
+int calculateMemoryBegin() {
+	int cycler = 92;
+	while (!didBreak) {
+		cycler += 4;
+		item instruction = MEM[cycler];
+		if( instruction.instrStr == "BREAK" ) {
+			didBreak = true;
+			return cycler;
+		}
+	}
+	return cycler;
+}
+
 string getQueues() {
 	string message;
 	message += "\nPre-Issue Buffer:\n";
@@ -167,10 +181,6 @@ string getRegisters() {
 		message += to_string(R[i]) + "\t";
 	}
 	return message;
-}
-
-void cycleInstructions() {
-	
 }
 
 int main( int argc, char* argv[])
@@ -233,13 +243,10 @@ int main( int argc, char* argv[])
 	dis.close();
 
 	sim.open((string(argv[4]) + "_pipeline.txt").c_str(), ofstream::out);
-	// start sim
-	// int PC = 96;
-	// int R[32] = {0};
 	int cycle = 1;
 
 	bool hasHitMemoryBreak = false;
-	while( !hasHitMemoryBreak ){
+	while( !hasHitMemoryBreak ) {
 		item instruction = MEM[PC];
 		if ( instruction.valid == 0 ){
 			PC +=4;
@@ -248,36 +255,52 @@ int main( int argc, char* argv[])
 
 		switch (instruction.opcode) {
 			case 32:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 33:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 34:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 35:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postmem = preissue[0];
 				premem[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 40:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 43:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postmem = preissue[0];
 				premem[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 46:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 			case 60:
+				R[instruction.rt] = R[instruction.rs] + instruction.imm;
 				postalu = preissue[0];
 				prealu[0] = preissue[0];
+				preissue[0] = 0;
 				break;
 		}
 
@@ -292,9 +315,9 @@ int main( int argc, char* argv[])
 
 		output += "\n\nData";
 
-		for (int i = 0; i < 24; i++) {
+		for (int i = 0; i < 8; i++) {
 			if (i % 8 == 0) {
-				int memoryAddress = 172 + (i * 4);
+				int memoryAddress = 128;
 				output += "\n" + to_string(memoryAddress) + ":\t";
 			}
 			output += (to_string(instruction.imm) + "\t");
@@ -302,11 +325,13 @@ int main( int argc, char* argv[])
 		output += "\n\n";
 
 		sim << output;
-/**/
 		PC += 4;
-		cycle ++;
+		cycle++;
 
-		if( instruction.instrStr == "BREAK" ) hasHitMemoryBreak = true;
+		if( instruction.instrStr == "BREAK" ) {
+			hasHitMemoryBreak = true;
+			preissue[0] = 0;
+		}	
 	}
 	sim.close();
 }

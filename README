@@ -1,5 +1,5 @@
 # This repository is for the CS286 001 Superscalar MIPS project
 
-### Contributions by Sage Phillips, {Insert your name here}
+### Contributions by Sage Phillips, Lillian Brunick (sagphil@siue.edu, lbrunic@siue.edu)
 
 Included in this repo are the Superscalar MIPS project .pdf file, which outlines what the software needs to be capable of doing, and the starting .cpp file Dr. McKenney wrote for us to launch our projects from. I've also included a Makefile with the necessary commands to compile the .cpp to an executable, though at present the compiled program is not actually performing any work.
