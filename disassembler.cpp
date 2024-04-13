@@ -15,6 +15,16 @@ struct item {
 	unsigned int asUint;
 };
 
+int PC = 96;
+int R[32] = {0};
+int cycle = 1;
+int preissue[4] = {0};
+int premem[2] = {0};
+int prealu[2] = {0};
+int postmem = 0;
+int postalu = 0;
+bool didBreak = false;
+map< int, item> MEM;
 ofstream dis;
 ofstream sim;
 
@@ -124,6 +134,41 @@ void printInstruction(int address, item* inputInstruction) {
 	dis << inputInstruction->binStr << "\t" << address << "\t" << inputInstruction->instrStr << endl;
 }
 
+string getQueues() {
+	string message;
+	message += "\nPre-Issue Buffer:\n";
+	for (int i = 0; i < 4; i++ ) {
+		message += "\tEntry " + to_string(i) + ":\t" + MEM[preissue[i]].instrStr + "\n";
+	}
+
+	message += "Pre_ALU Queue:\n";
+	for (int i = 0; i < 2; i++) {
+		message += "\tEntry " + to_string(i) + ":\t" + MEM[prealu[i]].instrStr + "\n";
+	}
+
+	message += "Post_ALU Queue:\n\tEntry 0:\t" + MEM[postalu].instrStr + "\n";
+
+	message += "Pre_MEM Queue:\n";
+	for (int i = 0; i < 2; i++) {
+		message += "\tEntry " + to_string(i) + ":\t" + MEM[premem[i]].instrStr + "\n";
+	}
+
+	message += "Post_MEM Queue:\n\tEntry 0:\t" + MEM[postmem].instrStr + "\n\n";
+
+	return message;
+}
+
+string getRegisters() {
+	string message = "Registers";
+	for (int i = 0; i < 32; i++) {
+		if (i % 8 == 0) {
+			message += "\nR" + ((i < 15) ? (to_string(0) + to_string(i)) : (to_string(i))) + ":\t";
+		}
+		message += to_string(R[i]) + "\t";
+	}
+	return message;
+}
+
 int main( int argc, char* argv[])
 {
         char buffer[4];
@@ -142,7 +187,7 @@ int main( int argc, char* argv[])
 	// int FD = open(inputName, O_RDONLY);
 	dis.open((string(argv[4]) + "_dis.txt").c_str(), ofstream::out);
 
-	map< int, item > MEM;
+	// map< int, item > MEM;
 	int addr = 96;
 	int amt = 4;
 	bool hasHitBreak = false;
@@ -185,8 +230,8 @@ int main( int argc, char* argv[])
 
 	sim.open((string(argv[4]) + "_pipeline.txt").c_str(), ofstream::out);
 	// start sim
-	int PC = 96;
-	int R[32] = {0};
+	// int PC = 96;
+	// int R[32] = {0};
 	int cycle = 1;
 
 	bool hasHitMemoryBreak = false;
@@ -217,15 +262,16 @@ int main( int argc, char* argv[])
 				break;
 		}
 
-		string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
+		preissue[0] = PC;
 
-		for (int i = 0; i < 32; i++) {
-			if (i % 8 == 0) {
-				output += "\nr" + ((i < 15) ? (to_string(0) + to_string(i)) : (to_string(i))) + ":\t";
-			}
-			output += to_string(R[i]) + "\t";
-		}
-		output += "\n\ndata:";
+		// string output = "====================\ncycle:" + to_string(cycle) + " " + to_string(PC) + "\t" + instruction.instrStr + "\n\nregisters:";
+		string output = "--------------------\nCycle:" + to_string(cycle) + "\n";
+
+		output += getQueues();
+
+		output += getRegisters();
+
+		output += "\n\nData";
 
 		for (int i = 0; i < 24; i++) {
 			if (i % 8 == 0) {
